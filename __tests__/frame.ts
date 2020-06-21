@@ -1,5 +1,5 @@
 import {Frame} from "../src/frame"
-import {scoreRangeError, secondRollOnStrikeErrorMessage} from "../src/errors";
+import {scoreRangeError} from "../src/errors";
 
 describe(`Frame`, () => {
     let frame: Frame;
@@ -16,13 +16,7 @@ describe(`Frame`, () => {
 
     describe(`setRolls()`, () => {
         let i = 10;
-        it(`ss200.T${i}: throws an error when setting a 2nd roll after a strike`, async () => {
-            expect(() => {
-                frame.setRolls([10, 1]);
-            }).toThrow(secondRollOnStrikeErrorMessage)
-        });
 
-        i += 10
         it(`ss200.T${i}: throws an error when one score is out of bounds`, async () => {
             expect(() => {
                 frame.setRolls([-1, 9]);
@@ -75,6 +69,18 @@ describe(`Frame`, () => {
         i += 10
         it(`ss400.T${i}: a spare if the total frame score is 10`, async () => {
             frame.setRolls([5, 5]);
+            expect(frame.isSpare()).toEqual(true);
+        });
+
+        i += 10
+        it(`ss400.T${i}: not a spare if the first roll is 10`, async () => {
+            frame.setRolls([10]);
+            expect(frame.isSpare()).toEqual(false);
+        });
+
+        i += 10
+        it(`ss400.T${i}: is a spare if it's the final frame with 3 rolls`, async () => {
+            frame.setRolls([1, 9, 10]);
             expect(frame.isSpare()).toEqual(true);
         });
     })

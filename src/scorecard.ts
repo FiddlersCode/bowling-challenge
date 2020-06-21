@@ -1,36 +1,59 @@
 import {IFrame} from "./frame";
-import {cannotCalculateBonusError} from "./errors";
 
 export class Scorecard {
     private frames: IFrame[] = []
-    private totalScore = 0
 
-    getTotalScore = () => {
-        return this.totalScore
-    }
+    addFrame = (frame: IFrame) => { this.frames.push(frame) }
 
-    addFrame = (frame: IFrame) => {
-        this.frames.push(frame)
-    }
-
-    getFrames = () => {
-        return this.frames
-    }
+    getFrames = () => { return this.frames }
 
     calculateFrameScore = (frame: IFrame) => {
         return frame.rolls.reduce((a, b) => { return a + b });
     }
 
     calculateBonusScore = (frameNumber: number) => {
-        if (frameNumber == 0) { throw cannotCalculateBonusError }
-        const previousFrame = this.frames[frameNumber - 1]
+        if (frameNumber == 9) { return 0 }
         const frame = this.frames[frameNumber]
-        if (previousFrame.isStrike() && !frame.isStrike()) {
-            return frame.getTotalFrameScore()
+        const nextFrame = this.frames[frameNumber + 1]
+
+        if (frameNumber < 8 && frame.isStrike() && nextFrame.isStrike()) {
+            return nextFrame.getTotalFrameScore() + this.frames[frameNumber + 2].rolls[0]
         }
 
-        if (previousFrame.isSpare()) {
-            return frame.rolls[0]
+        if (frameNumber == 8 && frame.isStrike() && nextFrame.isStrike()) {
+            return nextFrame.rolls[0] + nextFrame.rolls[1]
         }
+
+        if (frameNumber == 8 && frame.isStrike()) {
+            return nextFrame.rolls[0] + nextFrame.rolls[1]
+        }
+
+        if (frame.isStrike()) { return nextFrame.getTotalFrameScore() }
+
+        if (frame.isSpare()) { return nextFrame.rolls[0] }
+        return 0
+    }
+
+    calculateTotalScore = () => {
+        const frameScores = this.getFrameScores()
+        const bonusScores = this.getBonusScores()
+        return this.getTotalFrameScores(frameScores) + this.getTotalBonusScores(bonusScores);
+    }
+
+
+    private getTotalBonusScores(bonusScores: (any | number)[]) {
+        return bonusScores.reduce((a, b) => { return a + b });
+    }
+
+    private getTotalFrameScores(frameScores: number[]) {
+        return frameScores.reduce((a, b) => { return a + b });
+    }
+
+    private getFrameScores() {
+        return this.frames.map((frame) => { return this.calculateFrameScore(frame) });
+    }
+
+    private getBonusScores() {
+        return this.frames.map((frame, index) => { return this.calculateBonusScore(index) });
     }
 }

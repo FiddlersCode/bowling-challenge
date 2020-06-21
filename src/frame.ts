@@ -1,9 +1,12 @@
-import {scoreRangeError, secondRollOnStrikeErrorMessage} from "./errors";
+import {scoreRangeError} from "./errors";
 
 export interface IFrame {
     rolls: number[];
+
     isStrike();
+
     isSpare();
+
     getTotalFrameScore();
 }
 
@@ -12,23 +15,29 @@ export class Frame implements IFrame {
     private minScore: number = 0
     private maxScore: number = 10
 
-    getRolls = () => { return this.rolls }
+    getRolls = () => {
+        return this.rolls
+    }
 
     setRolls = (scores: number[]) => {
         if (this.scoresOutOfRange(scores)) {
             throw scoreRangeError
         }
-        if (scores[0] == this.maxScore && scores.length > 1) {
-            throw secondRollOnStrikeErrorMessage
-        }
         return this.rolls = scores
     }
-    isStrike = () => { return this.rolls[0] == this.maxScore }
+    isStrike = () => {
+        return this.rolls[0] === this.maxScore
+    }
 
-    isSpare = () => { return this.getTotalFrameScore() == this.maxScore }
+    isSpare = () => {
+        return this.rolls[0] !== this.maxScore &&
+            this.rolls[0] + this.rolls[1] == this.maxScore
+    }
 
     getTotalFrameScore = () => {
-        return this.rolls.reduce((a, b) => { return a + b });
+        return this.rolls.reduce((a, b) => {
+            return a + b
+        });
     }
 
     private isTooHigh = (score: number) => {
