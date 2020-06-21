@@ -11,7 +11,7 @@ span {
 
 .button {
     background-color: #4CAF50; /* Green */
-    background:url(images/star-trek-spock1.jpg);
+    background:url(legacy-code/images/star-trek-spock1.jpg);
     border: none;
     color: white;
     padding: 15px 32px;
