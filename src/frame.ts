@@ -1,7 +1,11 @@
 import {scoreRangeError, secondRollOnStrikeErrorMessage} from "./errors";
 
-export class Frame {
-    private rolls: number[] = [0, 0]
+export interface IFrame {
+    rolls: number[]
+}
+
+export class Frame implements IFrame {
+    rolls: number[] = [0, 0]
     private minScore: number = 0
     private maxScore: number = 10
 
