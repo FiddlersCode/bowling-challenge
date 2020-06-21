@@ -1,7 +1,10 @@
 import {scoreRangeError, secondRollOnStrikeErrorMessage} from "./errors";
 
 export interface IFrame {
-    rolls: number[]
+    rolls: number[];
+    isStrike();
+    isSpare();
+    getTotalFrameScore();
 }
 
 export class Frame implements IFrame {
@@ -24,7 +27,7 @@ export class Frame implements IFrame {
 
     isSpare = () => { return this.getTotalFrameScore() == this.maxScore }
 
-    private getTotalFrameScore = () => {
+    getTotalFrameScore = () => {
         return this.rolls.reduce((a, b) => { return a + b });
     }
 
