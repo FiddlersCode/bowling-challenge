@@ -4,31 +4,38 @@ export class Frame {
     private rolls: number[] = [0, 0]
     private minScore: number = 0
     private maxScore: number = 10
+
     getRolls = () => { return this.rolls }
 
-    setRolls = (first: number, second: number) => {
-        if (this.scoresOutOfRange(first, second)) {
+    setRolls = (scores: number[]) => {
+        if (this.scoresOutOfRange(scores)) {
             throw scoreRangeError
         }
-        if (first == this.maxScore && second != this.minScore) {
+        if (scores[0] == this.maxScore && scores.length > 1) {
             throw secondRollOnStrikeErrorMessage
         }
-        return this.rolls = [first, second]
+        return this.rolls = scores
     }
     isStrike = () => { return this.rolls[0] == this.maxScore }
 
     isSpare = () => { return this.getTotalFrameScore() == this.maxScore }
 
-    private getTotalFrameScore() {
+    private getTotalFrameScore = () => {
         return this.rolls.reduce((a, b) => { return a + b });
     }
 
-    private scoresOutOfRange = (first, second): Boolean => {
-        return (
-            first > this.maxScore ||
-            first < this.minScore ||
-            second > this.maxScore ||
-            second < this.minScore
-        )
+    private isTooHigh = (score: number) => {
+        return score > this.maxScore
+    }
+
+    private isTooLow = (score: number) => {
+        return score < this.minScore
+    }
+
+    private scoreOutOfRange = (score: number) => {
+        return this.isTooHigh(score) ? true : this.isTooLow(score)
+    }
+    private scoresOutOfRange = (scores: number[]): Boolean => {
+        return scores.some(this.scoreOutOfRange)
     }
 }
