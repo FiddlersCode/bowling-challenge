@@ -2,6 +2,11 @@
 Bowling Challenge
 =================
 This is from the Makers course.
+
+## Dev
+- Install: `npm i`
+- Tests: `npm run test`
+
 ## The Task
 
 **THIS IS NOT A BOWLING GAME, IT IS A BOWLING SCORECARD. DO NOT GENERATE RANDOM ROLLS. THE USER INPUTS THE ROLLS.**

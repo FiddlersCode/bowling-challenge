@@ -3,85 +3,86 @@ import {scoreRangeError} from "../src/errors";
 
 describe(`Frame`, () => {
     let frame: Frame;
+    let ss: number = 100;
     beforeEach(() => {
         frame = new Frame();
     })
 
     describe(`getRolls()`, () => {
         let i = 10;
-        it(`ss100.T${i}: has 2 rolls`, async () => {
+        it(`ss${ss}.T${i}: has 2 rolls`,  () => {
             expect(frame.getRolls()).toEqual([0, 0]);
         });
     })
 
+    ss += 100
     describe(`setRolls()`, () => {
         let i = 10;
 
-        it(`ss200.T${i}: throws an error when one score is out of bounds`, async () => {
-            expect(() => {
-                frame.setRolls([-1, 9]);
-            }).toThrow(scoreRangeError)
-        });
-
-        i += 10
-        it(`ss200.T${i}: throws an error when one score is out of bounds`, async () => {
-            expect(() => {
-                frame.setRolls([9, -1]);
-            }).toThrow(scoreRangeError)
-        });
-
-        i += 10
-        it(`ss200.T${i}: throws an error when the scores are out of bounds`, async () => {
-            expect(() => {
-                frame.setRolls([11, -1]);
-            }).toThrow(scoreRangeError)
-        });
-
-        i += 10
-        it(`ss200.T${i}: throws an error when the scores are out of bounds`, async () => {
-            expect(() => {
-                frame.setRolls([-1, 11]);
-            }).toThrow(scoreRangeError)
+        it(`ss${ss}.T${i}: throws an error when one score is out of bounds`,  () => {
+            const params = [
+                { rolls: [-1, 9] },
+                { rolls: [9, -1] },
+                { rolls: [11, -1] },
+                { rolls: [-1, 11] }
+            ]
+            
+            params.forEach((param) => {
+                expect(() => {
+                    frame.setRolls(param.rolls);
+                }).toThrow(scoreRangeError)    
+            })
         });
     })
 
+    ss += 100
     describe(`isStrike()`, () => {
         let i = 10;
-        it(`ss300.T${i}: not a strike`, async () => {
-            frame.setRolls([9, 0]);
-            expect(frame.isStrike()).toEqual(false);
-        });
+        it(`ss${ss}.T${i}: not a strike`,  () => {
+            const params = [
+                {
+                    rolls: [9, 0],
+                    expected: false
+                },
+                {
+                    rolls: [10],
+                    expected: true
+                }
+            ]
 
-        i += 10
-        it(`ss300.T${i}: a strike if the first roll scores 10`, async () => {
-            frame.setRolls([10]);
-            expect(frame.isStrike()).toEqual(true);
+            params.forEach((param) => {
+                frame.setRolls(param.rolls);
+                expect(frame.isStrike()).toEqual(param.expected);
+            })
         });
     })
 
+    ss += 100
     describe(`isSpare()`, () => {
         let i = 10
-        it(`ss400.T${i}: not a spare`, async () => {
-            frame.setRolls([5, 9]);
-            expect(frame.isSpare()).toEqual(false);
-        });
-
-        i += 10
-        it(`ss400.T${i}: a spare if the total frame score is 10`, async () => {
-            frame.setRolls([5, 5]);
-            expect(frame.isSpare()).toEqual(true);
-        });
-
-        i += 10
-        it(`ss400.T${i}: not a spare if the first roll is 10`, async () => {
-            frame.setRolls([10]);
-            expect(frame.isSpare()).toEqual(false);
-        });
-
-        i += 10
-        it(`ss400.T${i}: is a spare if it's the final frame with 3 rolls`, async () => {
-            frame.setRolls([1, 9, 10]);
-            expect(frame.isSpare()).toEqual(true);
+        it(`ss${ss}.T${i}: not a spare`,  () => {
+            const params = [
+                {
+                    rolls: [5, 9],
+                    expected: false
+                },
+                {
+                    rolls: [5, 5],
+                    expected: true
+                },
+                {
+                    rolls: [10],
+                    expected: false
+                },
+                {
+                    rolls: [1, 9, 10],
+                    expected: true
+                }
+            ]
+            params.forEach((param) => {
+                frame.setRolls(param.rolls)
+                expect(frame.isSpare()).toEqual(param.expected)
+            })
         });
     })
 });

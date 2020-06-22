@@ -3,30 +3,34 @@ import {Frame, IFrame} from "../src/frame";
 import {setFrame} from "./testHelpers";
 
 
-
 describe(`Scorecard`, () => {
     let scorecard: Scorecard;
+    let frame: IFrame;
     beforeEach(() => {
         scorecard = new Scorecard();
+        frame = {
+            rolls: [3, 3],
+            isStrike() {},
+            isSpare() {},
+            getTotalFrameScore() {}
+        }
     })
     let ss = 100;
 
     describe(`ss${ss}: addFrame()`, () => {
         let i = 10;
         it(`ss${ss}.T${i} adding a frame`, () => {
-            const rolls = [3, 3]
-            const frame: IFrame = {
-                rolls,
-                isStrike() {},
-                isSpare() {},
-                getTotalFrameScore() {}
-            }
             scorecard.addFrame(frame)
-            expect(scorecard.getFrames()[0].rolls).toEqual(rolls)
+            expect(scorecard.getFrames()[0].rolls).toEqual(frame.rolls)
         });
     })
     ss += 100
     describe(`ss${ss}: calculateFrameScore()`, () => {
+        let calculateFrameScoreFrame: Frame;
+
+        beforeEach(() => {
+            calculateFrameScoreFrame = new Frame()
+        })
         let i = 10;
         const params = [
             {
@@ -52,21 +56,9 @@ describe(`Scorecard`, () => {
         ]
         it(`ss${ss}.T${i}calculates a frame's score with 2 rolls`, () => {
             params.forEach((param) => {
-                const frame: Frame = new Frame()
-                frame.setRolls(param.rolls)
-                scorecard.addFrame(frame)
-                const score = scorecard.calculateFrameScore(frame)
-                expect(score).toEqual(param.expected)
-            })
-        });
-
-        i += 10;
-        it(`ss${ss}.T${i}calculates a frame's score with 3 rolls`, () => {
-            params.forEach((param) => {
-                const frame: Frame = new Frame()
-                frame.setRolls(param.rolls)
-                scorecard.addFrame(frame)
-                const score = scorecard.calculateFrameScore(frame)
+                calculateFrameScoreFrame.setRolls(param.rolls)
+                scorecard.addFrame(calculateFrameScoreFrame)
+                const score = scorecard.calculateFrameScore(calculateFrameScoreFrame)
                 expect(score).toEqual(param.expected)
             })
         });
@@ -131,16 +123,16 @@ describe(`Scorecard`, () => {
         let i = 10;
         it(`ss${ss}.T${i} gutter game`, () => {
             const rolls = [
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0],
-               [0, 0]
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0],
+                [0, 0]
             ]
             rolls.forEach((roll) => {
                 setFrame(scorecard, roll)
@@ -151,16 +143,16 @@ describe(`Scorecard`, () => {
         i += 10;
         it(`ss${ss}.T${i} game with no bonuses`, () => {
             const rolls = [
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
-               [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
+                [3, 2],
             ]
             rolls.forEach((roll) => {
                 setFrame(scorecard, roll)
