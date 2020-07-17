@@ -20,10 +20,6 @@ export class Scorecard {
             return nextFrame.getTotalFrameScore() + this.frames[frameNumber + 2].rolls[0]
         }
 
-        if (frameNumber == 8 && frame.isStrike() && nextFrame.isStrike()) {
-            return nextFrame.rolls[0] + nextFrame.rolls[1]
-        }
-
         if (frameNumber == 8 && frame.isStrike()) {
             return nextFrame.rolls[0] + nextFrame.rolls[1]
         }
@@ -37,15 +33,15 @@ export class Scorecard {
     calculateTotalScore = () => {
         const frameScores = this.getFrameScores()
         const bonusScores = this.getBonusScores()
-        return this.getTotalFrameScores(frameScores) + this.getTotalBonusScores(bonusScores);
+        return Scorecard.getTotalFrameScores(frameScores) + Scorecard.getTotalBonusScores(bonusScores);
     }
 
 
-    private getTotalBonusScores(bonusScores: (any | number)[]) {
+    private static getTotalBonusScores(bonusScores: (number)[]) {
         return bonusScores.reduce((a, b) => { return a + b });
     }
 
-    private getTotalFrameScores(frameScores: number[]) {
+    private static getTotalFrameScores(frameScores: number[]) {
         return frameScores.reduce((a, b) => { return a + b });
     }
 
